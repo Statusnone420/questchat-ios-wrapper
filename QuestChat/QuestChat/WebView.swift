@@ -16,6 +16,77 @@ struct WebView: UIViewRepresentable {
         configuration.defaultWebpagePreferences.preferredContentMode = .mobile
         configuration.allowsInlineMediaPlayback = true
 
+        let userContentController = WKUserContentController()
+        let hideBottomNavScript = """
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const isIosApp = params.get('platform') === 'iosapp';
+            if (!isIosApp) {
+                return;
+            }
+
+            const labels = ['Chat', 'Activities', 'Stats', 'Quests', 'Info'];
+
+            const hideNav = () => {
+                const candidates = Array.from(document.querySelectorAll('nav, footer, div, section'));
+                const target = candidates.find(el => {
+                    const text = (el.textContent || '').trim();
+                    return labels.every(label => text.includes(label));
+                });
+
+                if (target) {
+                    target.style.setProperty('display', 'none', 'important');
+                    return true;
+                }
+
+                return false;
+            };
+
+            const applyInitialTabFromHash = () => {
+                const hashValue = (window.location.hash || '').replace(/^#/, '').toLowerCase();
+                const mapping = {
+                    chat: 'chat',
+                    activities: 'activities',
+                    stats: 'stats',
+                    quests: 'quests',
+                    info: 'info'
+                };
+
+                const targetTab = mapping[hashValue];
+                if (!targetTab) {
+                    return true;
+                }
+
+                const elements = Array.from(document.querySelectorAll('a, button, div, span'));
+                const targetEl = elements.find(el => (el.textContent || '').trim().toLowerCase() === targetTab);
+                if (targetEl && typeof targetEl.click === 'function') {
+                    targetEl.click();
+                    return true;
+                }
+
+                return false;
+            };
+
+            const hidden = hideNav();
+            const tabSelected = applyInitialTabFromHash();
+
+            if (( !hidden || !tabSelected ) && typeof MutationObserver !== 'undefined' && document.body) {
+                const observer = new MutationObserver((_, obs) => {
+                    const navHidden = hidden || hideNav();
+                    const tabApplied = tabSelected || applyInitialTabFromHash();
+
+                    if (navHidden && tabApplied) {
+                        obs.disconnect();
+                    }
+                });
+                observer.observe(document.body, { childList: true, subtree: true });
+            }
+        })();
+        """
+        let userScript = WKUserScript(source: hideBottomNavScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        userContentController.addUserScript(userScript)
+        configuration.userContentController = userContentController
+
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
         webView.scrollView.bounces = false
