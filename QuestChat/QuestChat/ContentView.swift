@@ -1,32 +1,51 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var isShowingSettings = false
+
     var body: some View {
-        TabView {
-            WebTabView(urlString: "https://questchat.app/?platform=iosapp#chat")
-                .tabItem {
-                    Label("Chat", systemImage: "bubble.left.and.bubble.right.fill")
-                }
+        ZStack(alignment: .topTrailing) {
+            TabView {
+                WebTabView(urlString: "https://questchat.app/?platform=iosapp#chat")
+                    .tabItem {
+                        Label("Chat", systemImage: "bubble.left.and.bubble.right.fill")
+                    }
 
-            WebTabView(urlString: "https://questchat.app/?platform=iosapp#activities")
-                .tabItem {
-                    Label("Activities", systemImage: "figure.walk")
-                }
+                WebTabView(urlString: "https://questchat.app/?platform=iosapp#activities")
+                    .tabItem {
+                        Label("Activities", systemImage: "figure.walk")
+                    }
 
-            WebTabView(urlString: "https://questchat.app/?platform=iosapp#stats")
-                .tabItem {
-                    Label("Stats", systemImage: "chart.bar.xaxis")
-                }
+                WebTabView(urlString: "https://questchat.app/?platform=iosapp#stats")
+                    .tabItem {
+                        Label("Stats", systemImage: "chart.bar.xaxis")
+                    }
 
-            WebTabView(urlString: "https://questchat.app/?platform=iosapp#quests")
-                .tabItem {
-                    Label("Quests", systemImage: "star.circle.fill")
-                }
+                WebTabView(urlString: "https://questchat.app/?platform=iosapp#quests")
+                    .tabItem {
+                        Label("Quests", systemImage: "star.circle.fill")
+                    }
 
-            WebTabView(urlString: "https://questchat.app/?platform=iosapp#info")
-                .tabItem {
-                    Label("Info", systemImage: "info.circle.fill")
-                }
+                WebTabView(urlString: "https://questchat.app/?platform=iosapp#info")
+                    .tabItem {
+                        Label("Info", systemImage: "info.circle.fill")
+                    }
+            }
+
+            Button {
+                isShowingSettings = true
+            } label: {
+                Image(systemName: "gearshape.fill")
+                    .imageScale(.large)
+                    .padding(10)
+                    .background(.thinMaterial)
+                    .clipShape(Circle())
+            }
+            .padding(.trailing, 16)
+            .padding(.top, 20)
+        }
+        .sheet(isPresented: $isShowingSettings) {
+            SettingsView()
         }
     }
 }
