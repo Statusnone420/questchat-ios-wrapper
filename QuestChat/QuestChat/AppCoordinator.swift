@@ -9,7 +9,12 @@ final class AppCoordinator {
 
     var rootView: some View {
         ContentView(
-            focusViewModel: dependencyContainer.makeFocusViewModel()
+            focusViewModel: dependencyContainer.makeFocusViewModel(),
+            statsView: makeStatsView()
         )
+    }
+
+    func makeStatsView() -> StatsView {
+        StatsView(viewModel: dependencyContainer.makeStatsViewModel())
     }
 }
