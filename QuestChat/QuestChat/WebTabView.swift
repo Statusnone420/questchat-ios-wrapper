@@ -2,10 +2,10 @@ import SwiftUI
 
 struct WebTabView: View {
     let urlString: String
+    @Binding var reloadTrigger: UUID
 
     @State private var isLoading = true
     @State private var hadError = false
-    @State private var reloadTrigger = UUID()
 
     var body: some View {
         ZStack {
@@ -53,5 +53,8 @@ struct WebTabView: View {
 }
 
 #Preview {
-    WebTabView(urlString: "https://questchat.app")
+    WebTabView(
+        urlString: "https://questchat.app",
+        reloadTrigger: .constant(UUID())
+    )
 }
