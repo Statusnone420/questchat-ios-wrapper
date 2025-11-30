@@ -1,29 +1,30 @@
 import SwiftUI
+import WebKit
 
 struct ContentView: View {
     var body: some View {
         TabView {
-            ChatTabView()
+            WebTabView(urlString: "https://questchat.app/?platform=iosapp#chat")
                 .tabItem {
                     Label("Chat", systemImage: "bubble.left.and.bubble.right.fill")
                 }
 
-            ActivitiesTabView()
+            WebTabView(urlString: "https://questchat.app/?platform=iosapp#activities")
                 .tabItem {
                     Label("Activities", systemImage: "figure.walk")
                 }
 
-            StatsTabView()
+            WebTabView(urlString: "https://questchat.app/?platform=iosapp#stats")
                 .tabItem {
                     Label("Stats", systemImage: "chart.bar.xaxis")
                 }
 
-            QuestsTabView()
+            WebTabView(urlString: "https://questchat.app/?platform=iosapp#quests")
                 .tabItem {
                     Label("Quests", systemImage: "star.circle.fill")
                 }
 
-            InfoTabView()
+            WebTabView(urlString: "https://questchat.app/?platform=iosapp#info")
                 .tabItem {
                     Label("Info", systemImage: "info.circle.fill")
                 }
@@ -31,7 +32,7 @@ struct ContentView: View {
     }
 }
 
-private struct WebTabView: View {
+struct WebTabView: View {
     let urlString: String
 
     @State private var isLoading = true
@@ -40,6 +41,24 @@ private struct WebTabView: View {
 
     var body: some View {
         ZStack {
+            WebView(
+                urlString: urlString,
+                isLoading: $isLoading,
+                hadError: $hadError,
+                reloadTrigger: reloadTrigger
+            )
+            .ignoresSafeArea()
+
+            if isLoading {
+                VStack(spacing: 12) {
+                    ProgressView()
+                    Text("Loading QuestChat…")
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color(.systemBackground))
+                .ignoresSafeArea()
+            }
+
             if hadError {
                 VStack(spacing: 16) {
                     Text("QuestChat needs a connection. Please check your internet and try again.")
@@ -54,55 +73,75 @@ private struct WebTabView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(.systemBackground))
-            } else {
-                WebView(
-                    urlString: urlString,
-                    isLoading: $isLoading,
-                    hadError: $hadError,
-                    reloadTrigger: reloadTrigger
-                )
                 .ignoresSafeArea()
-
-                if isLoading {
-                    VStack(spacing: 12) {
-                        ProgressView()
-                        Text("Loading QuestChat…")
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color(.systemBackground))
-                }
             }
         }
     }
 }
 
-private struct ChatTabView: View {
-    var body: some View {
-        WebTabView(urlString: "https://questchat.app/?platform=iosapp#chat")
-    }
-}
+struct WebView: UIViewRepresentable {
+    let urlString: String
+    @Binding var isLoading: Bool
+    @Binding var hadError: Bool
+    var reloadTrigger: UUID
 
-private struct ActivitiesTabView: View {
-    var body: some View {
-        WebTabView(urlString: "https://questchat.app/?platform=iosapp#activities")
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
     }
-}
 
-private struct StatsTabView: View {
-    var body: some View {
-        WebTabView(urlString: "https://questchat.app/?platform=iosapp#stats")
+    func makeUIView(context: Context) -> WKWebView {
+        let webView = WKWebView()
+        webView.navigationDelegate = context.coordinator
+        webView.scrollView.bounces = false
+        webView.scrollView.showsVerticalScrollIndicator = false
+        webView.scrollView.showsHorizontalScrollIndicator = false
+        loadURL(in: webView)
+        return webView
     }
-}
 
-private struct QuestsTabView: View {
-    var body: some View {
-        WebTabView(urlString: "https://questchat.app/?platform=iosapp#quests")
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        if context.coordinator.currentURLString != urlString || context.coordinator.reloadToken != reloadTrigger {
+            context.coordinator.currentURLString = urlString
+            context.coordinator.reloadToken = reloadTrigger
+            loadURL(in: uiView)
+        }
     }
-}
 
-private struct InfoTabView: View {
-    var body: some View {
-        WebTabView(urlString: "https://questchat.app/?platform=iosapp#info")
+    func loadURL(in webView: WKWebView) {
+        guard let url = URL(string: urlString) else { return }
+        let request = URLRequest(url: url)
+        webView.load(request)
+    }
+
+    class Coordinator: NSObject, WKNavigationDelegate {
+        var parent: WebView
+        var currentURLString: String
+        var reloadToken: UUID
+
+        init(_ parent: WebView) {
+            self.parent = parent
+            self.currentURLString = parent.urlString
+            self.reloadToken = parent.reloadTrigger
+        }
+
+        func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+            parent.isLoading = true
+            parent.hadError = false
+        }
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            parent.isLoading = false
+        }
+
+        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+            parent.isLoading = false
+            parent.hadError = true
+        }
+
+        func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+            parent.isLoading = false
+            parent.hadError = true
+        }
     }
 }
 
