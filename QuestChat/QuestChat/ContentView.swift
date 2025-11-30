@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var focusViewModel: FocusViewModel
+
     private let tabs: [(title: String, systemImage: String, url: String)] = [
         ("Chat", "bubble.left.and.bubble.right.fill", "https://questchat.app/?platform=iosapp#chat"),
         ("Activities", "figure.walk", "https://questchat.app/?platform=iosapp#activities"),
@@ -17,7 +19,8 @@ struct ContentView: View {
 
     private let impactGenerator = UIImpactFeedbackGenerator(style: .soft)
 
-    init() {
+    init(focusViewModel: FocusViewModel) {
+        _focusViewModel = StateObject(wrappedValue: focusViewModel)
         _reloadTokens = State(initialValue: Dictionary(uniqueKeysWithValues: tabs.map { ($0.title, UUID()) }))
     }
 
@@ -27,6 +30,12 @@ struct ContentView: View {
                 header
 
                 TabView(selection: $selectedTab) {
+                    FocusView(viewModel: focusViewModel)
+                        .tabItem {
+                            Label("Focus", systemImage: "timer")
+                        }
+                        .tag("Focus")
+
                     ForEach(tabs, id: \.title) { tab in
                         WebTabView(
                             urlString: tab.url,
@@ -126,5 +135,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(focusViewModel: FocusViewModel())
 }
