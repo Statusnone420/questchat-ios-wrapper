@@ -78,31 +78,31 @@ private struct WebTabView: View {
 
 private struct ChatTabView: View {
     var body: some View {
-        WebTabView(urlString: "https://questchat.app/#chat")
+        WebTabView(urlString: "https://questchat.app/?platform=iosapp#chat")
     }
 }
 
 private struct ActivitiesTabView: View {
     var body: some View {
-        WebTabView(urlString: "https://questchat.app/#activities")
+        WebTabView(urlString: "https://questchat.app/?platform=iosapp#activities")
     }
 }
 
 private struct StatsTabView: View {
     var body: some View {
-        WebTabView(urlString: "https://questchat.app/#stats")
+        WebTabView(urlString: "https://questchat.app/?platform=iosapp#stats")
     }
 }
 
 private struct QuestsTabView: View {
     var body: some View {
-        WebTabView(urlString: "https://questchat.app/#quests")
+        WebTabView(urlString: "https://questchat.app/?platform=iosapp#quests")
     }
 }
 
 private struct InfoTabView: View {
     var body: some View {
-        WebTabView(urlString: "https://questchat.app/#info")
+        WebTabView(urlString: "https://questchat.app/?platform=iosapp#info")
     }
 }
 
