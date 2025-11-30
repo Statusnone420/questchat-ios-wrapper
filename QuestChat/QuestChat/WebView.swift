@@ -20,7 +20,8 @@ struct WebView: UIViewRepresentable {
         let hideBottomNavScript = """
         (function() {
             const params = new URLSearchParams(window.location.search);
-            if (params.get('platform') !== 'iosapp') {
+            const isIosApp = params.get('platform') === 'iosapp';
+            if (!isIosApp) {
                 return;
             }
 
@@ -41,10 +42,40 @@ struct WebView: UIViewRepresentable {
                 return false;
             };
 
+            const applyInitialTabFromHash = () => {
+                const hashValue = (window.location.hash || '').replace(/^#/, '').toLowerCase();
+                const mapping = {
+                    chat: 'chat',
+                    activities: 'activities',
+                    stats: 'stats',
+                    quests: 'quests',
+                    info: 'info'
+                };
+
+                const targetTab = mapping[hashValue];
+                if (!targetTab) {
+                    return true;
+                }
+
+                const elements = Array.from(document.querySelectorAll('a, button, div, span'));
+                const targetEl = elements.find(el => (el.textContent || '').trim().toLowerCase() === targetTab);
+                if (targetEl && typeof targetEl.click === 'function') {
+                    targetEl.click();
+                    return true;
+                }
+
+                return false;
+            };
+
             const hidden = hideNav();
-            if (!hidden && typeof MutationObserver !== 'undefined' && document.body) {
+            const tabSelected = applyInitialTabFromHash();
+
+            if (( !hidden || !tabSelected ) && typeof MutationObserver !== 'undefined' && document.body) {
                 const observer = new MutationObserver((_, obs) => {
-                    if (hideNav()) {
+                    const navHidden = hidden || hideNav();
+                    const tabApplied = tabSelected || applyInitialTabFromHash();
+
+                    if (navHidden && tabApplied) {
                         obs.disconnect();
                     }
                 });
