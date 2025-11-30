@@ -75,6 +75,8 @@ struct WebTabView: View {
                 .ignoresSafeArea()
             }
         }
+        .background(Color(.systemBackground))
+        .ignoresSafeArea()
     }
 }
 
