@@ -8,10 +8,13 @@ final class FocusViewModel: ObservableObject {
 
     private let totalDuration: Int
     private var timerCancellable: AnyCancellable?
+    private let sessionStore: SessionStore
+    private var currentStartDate: Date?
 
-    init(duration: Int = 25 * 60) {
+    init(duration: Int = 25 * 60, sessionStore: SessionStore = UserDefaultsSessionStore()) {
         self.totalDuration = duration
         self.secondsRemaining = duration
+        self.sessionStore = sessionStore
     }
 
     func startOrPause() {
@@ -24,6 +27,7 @@ final class FocusViewModel: ObservableObject {
         secondsRemaining = totalDuration
         isRunning = false
         hasFinishedOnce = false
+        currentStartDate = nil
     }
 
     func tick() {
@@ -46,6 +50,10 @@ final class FocusViewModel: ObservableObject {
             reset()
         }
 
+        if secondsRemaining == totalDuration {
+            currentStartDate = Date()
+        }
+
         isRunning = true
 
         timerCancellable = Timer.publish(every: 1, on: .main, in: .common)
@@ -66,5 +74,13 @@ final class FocusViewModel: ObservableObject {
         hasFinishedOnce = true
         timerCancellable?.cancel()
         timerCancellable = nil
+        recordSession()
+    }
+
+    private func recordSession() {
+        let endDate = Date()
+        let startDate = currentStartDate ?? endDate.addingTimeInterval(Double(-totalDuration))
+        let session = Session(start: startDate, end: endDate)
+        sessionStore.appendSession(session)
     }
 }
