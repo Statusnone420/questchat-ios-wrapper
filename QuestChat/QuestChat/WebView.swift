@@ -21,6 +21,7 @@ struct WebView: UIViewRepresentable {
         webView.scrollView.bounces = false
         webView.scrollView.showsVerticalScrollIndicator = false
         webView.scrollView.showsHorizontalScrollIndicator = false
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.isOpaque = false
         webView.backgroundColor = .clear
         webView.scrollView.backgroundColor = .clear
@@ -61,7 +62,6 @@ struct WebView: UIViewRepresentable {
         }
         components.queryItems = queryItems
 
-        // Ensure the platform parameter is present even if the original URL lacked any components.
         return components.url
     }
 

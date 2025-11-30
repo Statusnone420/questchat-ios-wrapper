@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct LinkDestination: Identifiable {
+private struct SafariDestination: Identifiable {
     let id = UUID()
     let url: URL
 }
@@ -9,37 +9,29 @@ struct SettingsView: View {
     @AppStorage("settings_haptics_enabled") private var hapticsEnabled = true
     @AppStorage("settings_confirm_end_timer") private var confirmEndTimer = true
 
-    @State private var selectedLink: LinkDestination?
+    @State private var selectedLink: SafariDestination?
 
     var body: some View {
         NavigationStack {
             List {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("QuestChat")
-                        .font(.title)
-                        .fontWeight(.semibold)
-                    Text("Timer • Quests • Chat")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .padding(.vertical, 4)
+                header
 
-                Section {
+                Section("Preferences") {
                     Toggle("Haptics", isOn: $hapticsEnabled)
                     Toggle("Confirm before ending timer", isOn: $confirmEndTimer)
                 }
 
-                Section {
+                Section("Links") {
                     Button {
-                        selectedLink = LinkDestination(url: URL(string: "https://questchat.app")!)
+                        selectedLink = SafariDestination(url: URL(string: "https://questchat.app")!)
                     } label: {
-                        Label("Open questchat.app", systemImage: "safari")
+                        Label("Visit questchat.app", systemImage: "safari")
                     }
 
                     Button {
-                        selectedLink = LinkDestination(url: URL(string: "https://questchat.app/#info")!)
+                        selectedLink = SafariDestination(url: URL(string: "https://questchat.app/?platform=iosapp#info")!)
                     } label: {
-                        Label("Project info / Ko-fi", systemImage: "heart")
+                        Label("View project info / Ko-fi", systemImage: "heart")
                     }
                 }
 
@@ -56,6 +48,29 @@ struct SettingsView: View {
                 SafariView(url: destination.url)
             }
         }
+    }
+
+    private var header: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "message.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 50, height: 50)
+                .foregroundStyle(.blue)
+                .padding(8)
+                .background(.thinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("QuestChat")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                Text("Timer • Quests • Chat")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .padding(.vertical, 8)
     }
 }
 
