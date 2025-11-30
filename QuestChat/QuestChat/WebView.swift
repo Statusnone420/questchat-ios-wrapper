@@ -16,6 +16,46 @@ struct WebView: UIViewRepresentable {
         configuration.defaultWebpagePreferences.preferredContentMode = .mobile
         configuration.allowsInlineMediaPlayback = true
 
+        let userContentController = WKUserContentController()
+        let hideBottomNavScript = """
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('platform') !== 'iosapp') {
+                return;
+            }
+
+            const labels = ['Chat', 'Activities', 'Stats', 'Quests', 'Info'];
+
+            const hideNav = () => {
+                const candidates = Array.from(document.querySelectorAll('nav, footer, div, section'));
+                const target = candidates.find(el => {
+                    const text = (el.textContent || '').trim();
+                    return labels.every(label => text.includes(label));
+                });
+
+                if (target) {
+                    target.style.setProperty('display', 'none', 'important');
+                    return true;
+                }
+
+                return false;
+            };
+
+            const hidden = hideNav();
+            if (!hidden && typeof MutationObserver !== 'undefined' && document.body) {
+                const observer = new MutationObserver((_, obs) => {
+                    if (hideNav()) {
+                        obs.disconnect();
+                    }
+                });
+                observer.observe(document.body, { childList: true, subtree: true });
+            }
+        })();
+        """
+        let userScript = WKUserScript(source: hideBottomNavScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        userContentController.addUserScript(userScript)
+        configuration.userContentController = userContentController
+
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
         webView.scrollView.bounces = false
