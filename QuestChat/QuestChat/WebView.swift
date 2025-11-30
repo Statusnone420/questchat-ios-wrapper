@@ -16,6 +16,15 @@ struct WebView: UIViewRepresentable {
         configuration.defaultWebpagePreferences.preferredContentMode = .mobile
         configuration.allowsInlineMediaPlayback = true
 
+        let contentController = WKUserContentController()
+        let hideBottomNavScript = WKUserScript(
+            source: Self.hideBottomNavScript,
+            injectionTime: .atDocumentEnd,
+            forMainFrameOnly: true
+        )
+        contentController.addUserScript(hideBottomNavScript)
+        configuration.userContentController = contentController
+
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
         webView.scrollView.bounces = false
@@ -64,6 +73,35 @@ struct WebView: UIViewRepresentable {
         // Ensure the platform parameter is present even if the original URL lacked any components.
         return components.url
     }
+
+    private static let hideBottomNavScript = """
+(function() {
+  try {
+    const searchParams = new URLSearchParams(window.location.search);
+    const isIosNativeWrapper = searchParams.get('platform') === 'iosapp';
+    if (!isIosNativeWrapper) return;
+
+    const labels = ['Chat', 'Activities', 'Stats', 'Quests', 'Info'];
+    const hideNav = () => {
+      const candidates = Array.from(document.querySelectorAll('nav, footer, div'));
+      candidates.forEach((el) => {
+        const text = (el.textContent || '').trim();
+        if (!text) return;
+        const matchesAll = labels.every((label) => text.includes(label));
+        if (matchesAll) {
+          el.style.display = 'none';
+        }
+      });
+    };
+
+    hideNav();
+    const observer = new MutationObserver(() => hideNav());
+    observer.observe(document.body, { childList: true, subtree: true });
+  } catch (e) {
+    console.error('Failed to hide bottom nav', e);
+  }
+})();
+"""
 
     class Coordinator: NSObject, WKNavigationDelegate {
         var parent: WebView
