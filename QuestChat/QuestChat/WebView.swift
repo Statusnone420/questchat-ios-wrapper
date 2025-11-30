@@ -17,6 +17,10 @@ struct WebView: UIViewRepresentable {
         configuration.defaultWebpagePreferences.preferredContentMode = .mobile
         configuration.allowsInlineMediaPlayback = true
 
+        let userContentController = WKUserContentController()
+        userContentController.addUserScript(Self.hideWebNavigationScript())
+        configuration.userContentController = userContentController
+
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
         webView.allowsBackForwardNavigationGestures = true
@@ -67,6 +71,59 @@ struct WebView: UIViewRepresentable {
         components.queryItems = queryItems
 
         return components.url
+    }
+
+    private static func hideWebNavigationScript() -> WKUserScript {
+        let scriptSource = """
+        (function() {
+            const selectors = [
+                '[data-testid="bottom-nav"]',
+                '[data-test="bottom-nav"]',
+                '#bottom-nav',
+                '.bottom-nav',
+                '.bottom-navigation',
+                'nav[aria-label="bottom navigation"]',
+                'nav[role="tablist"]'
+            ];
+
+            const hideNav = () => {
+                for (const selector of selectors) {
+                    const element = document.querySelector(selector);
+                    if (element) {
+                        element.style.setProperty('display', 'none', 'important');
+                        return true;
+                    }
+                }
+
+                const candidates = Array.from(document.querySelectorAll('nav, footer, div'));
+                const match = candidates.find((el) => {
+                    const text = (el.textContent || '').toLowerCase();
+                    return ['chat', 'activities', 'stats', 'quests', 'info'].every((keyword) => text.includes(keyword));
+                });
+
+                if (match) {
+                    match.style.setProperty('display', 'none', 'important');
+                    return true;
+                }
+
+                return false;
+            };
+
+            if (!hideNav()) {
+                const observer = new MutationObserver(() => {
+                    if (hideNav()) {
+                        observer.disconnect();
+                    }
+                });
+
+                observer.observe(document.documentElement, { childList: true, subtree: true });
+
+                setTimeout(() => observer.disconnect(), 5000);
+            }
+        })();
+        """
+
+        return WKUserScript(source: scriptSource, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
     }
 
     class Coordinator: NSObject, WKNavigationDelegate {
