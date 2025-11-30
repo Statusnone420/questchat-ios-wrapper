@@ -37,7 +37,7 @@ struct WebView: UIViewRepresentable {
     }
 
     private func load(_ urlString: String, in webView: WKWebView) {
-        guard let url = URL(string: urlString) else {
+        guard let url = platformURL(from: urlString) else {
             hadError = true
             isLoading = false
             return
@@ -48,6 +48,21 @@ struct WebView: UIViewRepresentable {
 
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
         webView.load(request)
+    }
+
+    private func platformURL(from urlString: String) -> URL? {
+        guard var components = URLComponents(string: urlString) ?? URLComponents(string: "https://questchat.app") else {
+            return nil
+        }
+
+        var queryItems = components.queryItems ?? []
+        if !queryItems.contains(where: { $0.name == "platform" }) {
+            queryItems.append(URLQueryItem(name: "platform", value: "iosapp"))
+        }
+        components.queryItems = queryItems
+
+        // Ensure the platform parameter is present even if the original URL lacked any components.
+        return components.url
     }
 
     class Coordinator: NSObject, WKNavigationDelegate {
