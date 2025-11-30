@@ -1,7 +1,39 @@
 import SwiftUI
-import WebKit
 
 struct ContentView: View {
+    var body: some View {
+        TabView {
+            ChatTabView()
+                .tabItem {
+                    Label("Chat", systemImage: "bubble.left.and.bubble.right.fill")
+                }
+
+            ActivitiesTabView()
+                .tabItem {
+                    Label("Activities", systemImage: "figure.walk")
+                }
+
+            StatsTabView()
+                .tabItem {
+                    Label("Stats", systemImage: "chart.bar.xaxis")
+                }
+
+            QuestsTabView()
+                .tabItem {
+                    Label("Quests", systemImage: "star.circle.fill")
+                }
+
+            InfoTabView()
+                .tabItem {
+                    Label("Info", systemImage: "info.circle.fill")
+                }
+        }
+    }
+}
+
+private struct WebTabView: View {
+    let urlString: String
+
     @State private var isLoading = true
     @State private var hadError = false
     @State private var reloadTrigger = UUID()
@@ -23,8 +55,13 @@ struct ContentView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(.systemBackground))
             } else {
-                WebView(isLoading: $isLoading, hadError: $hadError, reloadTrigger: reloadTrigger)
-                    .ignoresSafeArea()
+                WebView(
+                    urlString: urlString,
+                    isLoading: $isLoading,
+                    hadError: $hadError,
+                    reloadTrigger: reloadTrigger
+                )
+                .ignoresSafeArea()
 
                 if isLoading {
                     VStack(spacing: 12) {
@@ -39,71 +76,33 @@ struct ContentView: View {
     }
 }
 
-struct WebView: UIViewRepresentable {
-    @Binding var isLoading: Bool
-    @Binding var hadError: Bool
-    var reloadTrigger: UUID
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+private struct ChatTabView: View {
+    var body: some View {
+        WebTabView(urlString: "https://questchat.app/#chat")
     }
+}
 
-    func makeUIView(context: Context) -> WKWebView {
-        let configuration = WKWebViewConfiguration()
-        configuration.defaultWebpagePreferences.preferredContentMode = .mobile
-        configuration.allowsInlineMediaPlayback = true
-
-        let webView = WKWebView(frame: .zero, configuration: configuration)
-        webView.navigationDelegate = context.coordinator
-        webView.scrollView.bounces = false
-        webView.scrollView.showsVerticalScrollIndicator = false
-        webView.scrollView.showsHorizontalScrollIndicator = false
-        webView.isOpaque = false
-        webView.backgroundColor = .black
-        webView.scrollView.backgroundColor = .black
-
-        if let url = URL(string: "https://questchat.app") {
-            webView.load(URLRequest(url: url))
-        }
-        return webView
+private struct ActivitiesTabView: View {
+    var body: some View {
+        WebTabView(urlString: "https://questchat.app/#activities")
     }
+}
 
-    func updateUIView(_ uiView: WKWebView, context: Context) {
-        if context.coordinator.reloadToken != reloadTrigger {
-            context.coordinator.reloadToken = reloadTrigger
-            if let url = URL(string: "https://questchat.app") {
-                uiView.load(URLRequest(url: url))
-            }
-        }
+private struct StatsTabView: View {
+    var body: some View {
+        WebTabView(urlString: "https://questchat.app/#stats")
     }
+}
 
-    class Coordinator: NSObject, WKNavigationDelegate {
-        var parent: WebView
-        var reloadToken: UUID
+private struct QuestsTabView: View {
+    var body: some View {
+        WebTabView(urlString: "https://questchat.app/#quests")
+    }
+}
 
-        init(_ parent: WebView) {
-            self.parent = parent
-            self.reloadToken = parent.reloadTrigger
-        }
-
-        func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-            parent.isLoading = true
-            parent.hadError = false
-        }
-
-        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            parent.isLoading = false
-        }
-
-        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-            parent.isLoading = false
-            parent.hadError = true
-        }
-
-        func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-            parent.isLoading = false
-            parent.hadError = true
-        }
+private struct InfoTabView: View {
+    var body: some View {
+        WebTabView(urlString: "https://questchat.app/#info")
     }
 }
 
