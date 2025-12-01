@@ -3,10 +3,10 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var focusViewModel: FocusViewModel
 
+    private let statsView: StatsView
     private let tabs: [(title: String, systemImage: String, url: String)] = [
         ("Chat", "bubble.left.and.bubble.right.fill", "https://questchat.app/?platform=iosapp#chat"),
         ("Activities", "figure.walk", "https://questchat.app/?platform=iosapp#activities"),
-        ("Stats", "chart.bar.xaxis", "https://questchat.app/?platform=iosapp#stats"),
         ("Quests", "star.circle.fill", "https://questchat.app/?platform=iosapp#quests"),
         ("Info", "info.circle.fill", "https://questchat.app/?platform=iosapp#info")
     ]
@@ -19,8 +19,9 @@ struct ContentView: View {
 
     private let impactGenerator = UIImpactFeedbackGenerator(style: .soft)
 
-    init(focusViewModel: FocusViewModel) {
+    init(focusViewModel: FocusViewModel, statsView: StatsView) {
         _focusViewModel = StateObject(wrappedValue: focusViewModel)
+        self.statsView = statsView
         _reloadTokens = State(initialValue: Dictionary(uniqueKeysWithValues: tabs.map { ($0.title, UUID()) }))
     }
 
@@ -35,6 +36,12 @@ struct ContentView: View {
                             Label("Focus", systemImage: "timer")
                         }
                         .tag("Focus")
+
+                    statsView
+                        .tabItem {
+                            Label("Stats", systemImage: "chart.bar.xaxis")
+                        }
+                        .tag("Stats")
 
                     ForEach(tabs, id: \.title) { tab in
                         WebTabView(
@@ -135,5 +142,8 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(focusViewModel: FocusViewModel())
+    ContentView(
+        focusViewModel: FocusViewModel(),
+        statsView: StatsView(viewModel: StatsViewModel(sessionStore: UserDefaultsSessionStore()))
+    )
 }
