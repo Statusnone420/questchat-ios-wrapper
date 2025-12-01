@@ -7,26 +7,76 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		D83C3F542EDCD1EE00D4E0AC /* QuestChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuestChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+                D83C3F542EDCD1EE00D4E0AC /* QuestChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuestChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+                D8A100010000000000000001 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+                D8A100030000000000000001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+                D8A100050000000000000001 /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
+                D8A100070000000000000001 /* FocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusView.swift; sourceTree = "<group>"; };
+                D8A100090000000000000001 /* FocusViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusViewModel.swift; sourceTree = "<group>"; };
+                D8A1000B0000000000000001 /* QuestChatApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestChatApp.swift; sourceTree = "<group>"; };
+                D8A1000D0000000000000001 /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
+                D8A1000F0000000000000001 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+                D8A100110000000000000001 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+                D8A100130000000000000001 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
+                D8A100150000000000000001 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+                D8A100170000000000000001 /* StatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewModel.swift; sourceTree = "<group>"; };
+                D8A100190000000000000001 /* WebTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTabView.swift; sourceTree = "<group>"; };
+                D8A1001B0000000000000001 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+                D8A1001D0000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		D83C3F562EDCD1EE00D4E0AC /* QuestChat */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = QuestChat;
-			sourceTree = "<group>";
-		};
+                D83C3F562EDCD1EE00D4E0AC /* QuestChat */ = {
+                        isa = PBXFileSystemSynchronizedRootGroup;
+                        children = (
+                                D8A100010000000000000001 /* AppCoordinator.swift */,
+                                D8A1001D0000000000000001 /* Assets.xcassets */,
+                                D8A100030000000000000001 /* ContentView.swift */,
+                                D8A100050000000000000001 /* DependencyContainer.swift */,
+                                D8A100070000000000000001 /* FocusView.swift */,
+                                D8A100090000000000000001 /* FocusViewModel.swift */,
+                                D8A1000B0000000000000001 /* QuestChatApp.swift */,
+                                D8A1000D0000000000000001 /* SafariView.swift */,
+                                D8A1000F0000000000000001 /* SettingsView.swift */,
+                                D8A100110000000000000001 /* Session.swift */,
+                                D8A100130000000000000001 /* SessionStore.swift */,
+                                D8A100150000000000000001 /* StatsView.swift */,
+                                D8A100170000000000000001 /* StatsViewModel.swift */,
+                                D8A100190000000000000001 /* WebTabView.swift */,
+                                D8A1001B0000000000000001 /* WebView.swift */,
+                        );
+                        path = QuestChat;
+                        sourceTree = "<group>";
+                };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		D83C3F512EDCD1EE00D4E0AC /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
+                D83C3F512EDCD1EE00D4E0AC /* Frameworks */ = {
+                        isa = PBXFrameworksBuildPhase;
+                        buildActionMask = 2147483647;
+                        files = (
+                        );
+                        runOnlyForDeploymentPostprocessing = 0;
+                };
 /* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXBuildFile section */
+                D8A100020000000000000001 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A100010000000000000001 /* AppCoordinator.swift */; };
+                D8A100040000000000000001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A100030000000000000001 /* ContentView.swift */; };
+                D8A100060000000000000001 /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A100050000000000000001 /* DependencyContainer.swift */; };
+                D8A100080000000000000001 /* FocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A100070000000000000001 /* FocusView.swift */; };
+                D8A1000A0000000000000001 /* FocusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A100090000000000000001 /* FocusViewModel.swift */; };
+                D8A1000C0000000000000001 /* QuestChatApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A1000B0000000000000001 /* QuestChatApp.swift */; };
+                D8A1000E0000000000000001 /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A1000D0000000000000001 /* SafariView.swift */; };
+                D8A100100000000000000001 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A1000F0000000000000001 /* SettingsView.swift */; };
+                D8A100120000000000000001 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A100110000000000000001 /* Session.swift */; };
+                D8A100140000000000000001 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A100130000000000000001 /* SessionStore.swift */; };
+                D8A100160000000000000001 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A100150000000000000001 /* StatsView.swift */; };
+                D8A100180000000000000001 /* StatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A100170000000000000001 /* StatsViewModel.swift */; };
+                D8A1001A0000000000000001 /* WebTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A100190000000000000001 /* WebTabView.swift */; };
+                D8A1001C0000000000000001 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A1001B0000000000000001 /* WebView.swift */; };
+                D8A1001E0000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8A1001D0000000000000001 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
 
 /* Begin PBXGroup section */
 		D83C3F4B2EDCD1EE00D4E0AC = {
@@ -105,23 +155,38 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		D83C3F522EDCD1EE00D4E0AC /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
+                D83C3F522EDCD1EE00D4E0AC /* Resources */ = {
+                        isa = PBXResourcesBuildPhase;
+                        buildActionMask = 2147483647;
+                        files = (
+                                D8A1001E0000000000000001 /* Assets.xcassets in Resources */,
+                        );
+                        runOnlyForDeploymentPostprocessing = 0;
+                };
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		D83C3F502EDCD1EE00D4E0AC /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
+                D83C3F502EDCD1EE00D4E0AC /* Sources */ = {
+                        isa = PBXSourcesBuildPhase;
+                        buildActionMask = 2147483647;
+                        files = (
+                                D8A100020000000000000001 /* AppCoordinator.swift in Sources */,
+                                D8A100040000000000000001 /* ContentView.swift in Sources */,
+                                D8A100060000000000000001 /* DependencyContainer.swift in Sources */,
+                                D8A100080000000000000001 /* FocusView.swift in Sources */,
+                                D8A1000A0000000000000001 /* FocusViewModel.swift in Sources */,
+                                D8A1000C0000000000000001 /* QuestChatApp.swift in Sources */,
+                                D8A1000E0000000000000001 /* SafariView.swift in Sources */,
+                                D8A100100000000000000001 /* SettingsView.swift in Sources */,
+                                D8A100120000000000000001 /* Session.swift in Sources */,
+                                D8A100140000000000000001 /* SessionStore.swift in Sources */,
+                                D8A100160000000000000001 /* StatsView.swift in Sources */,
+                                D8A100180000000000000001 /* StatsViewModel.swift in Sources */,
+                                D8A1001A0000000000000001 /* WebTabView.swift in Sources */,
+                                D8A1001C0000000000000001 /* WebView.swift in Sources */,
+                        );
+                        runOnlyForDeploymentPostprocessing = 0;
+                };
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
