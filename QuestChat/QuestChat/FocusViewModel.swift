@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 
+@MainActor
 final class FocusViewModel: ObservableObject {
     @Published var isRunning: Bool = false
     @Published var secondsRemaining: Int

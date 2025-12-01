@@ -1,7 +1,11 @@
 import SwiftUI
 
 struct FocusView: View {
-    @StateObject var viewModel: FocusViewModel
+    @StateObject private var viewModel: FocusViewModel
+
+    init(viewModel: FocusViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
 
     var body: some View {
         VStack(spacing: 32) {
