@@ -1,11 +1,7 @@
 import SwiftUI
 
 struct StatsView: View {
-    @StateObject private var viewModel: StatsViewModel
-
-    init(viewModel: StatsViewModel) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-    }
+    @StateObject var viewModel: StatsViewModel
 
     private let durationFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
